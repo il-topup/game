@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameStore - Topup Game Instant & Terpercaya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f6ff',
+                            100: '#e0edff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            accent: '#8b5cf6',
+                            neon: '#00f2fe'
+                        },
+                        dark: {
+                            bg: '#0b0f19',
+                            card: '#111827',
+                            border: '#1f2937',
+                            hover: '#374151'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0b0f19; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-dark-bg text-gray-100 min-h-screen flex flex-col justify-between custom-scrollbar">
+
+    <!-- Navbar -->
+    <header class="sticky top-0 z-40 w-full glass-card border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-accent flex items-center justify-center shadow-lg shadow-brand-600/30">
+                        <i data-lucide="gamepad-2" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold bg-gradient-to-r from-white via-gray-200 to-brand-neon bg-clip-text text-transparent">GAMESTORE</span>
+                        <span class="block text-[10px] text-brand-neon font-semibold -mt-1 tracking-widest uppercase">Official Topup</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="hidden md:flex items-center gap-6">
+                    <button onclick="switchTab('home')" class="text-gray-300 hover:text-white transition flex items-center gap-2 font-medium text-sm">
+                        <i data-lucide="home" class="w-4 h-4"></i> Beranda
+                    </button>
+                    <button onclick="checkTransactionHistory()" class="text-gray-300 hover:text-white transition flex items-center gap-2 font-medium text-sm">
+                        <i data-lucide="receipt" class="w-4 h-4"></i> Cek Transaksi
+                    </button>
+                    <button onclick="switchTab('home')" class="text-gray-300 hover:text-white transition flex items-center gap-2 font-medium text-sm">
+                        <i data-lucide="help-circle" class="w-4 h-4"></i> Bantuan
+                    </button>
+                </nav>
+
+                <!-- Auth Buttons / User Profile -->
+                <div class="flex items-center gap-3" id="navAuthContainer">
+                    <!-- Dynamic rendering via JS -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- ================= PAGE: HOME / USER TOPUP ================= -->
+        <div id="pageHome" class="space-y-8">
+            
+            <!-- Banner / Hero Section -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-900/60 via-purple-900/40 to-dark-card border border-gray-800 p-6 md:p-10 shadow-2xl">
+                <div class="relative z-10 max-w-2xl">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/20 text-brand-neon border border-brand-500/30 mb-4">
+                        <i data-lucide="zap" class="w-3.5 h-3.5"></i> Proses Serba Otomatis 24/7
+                    </span>
+                    <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+                        Topup Game Favoritmu <span class="bg-gradient-to-r from-brand-neon via-brand-500 to-brand-accent bg-clip-text text-transparent">Lebih Murah & Cepat</span>
+                    </h1>
+                    <p class="text-gray-400 text-sm md:text-base mb-6">
+                        Layanan topup game online terlengkap dengan berbagai pilihan metode pembayaran instan via QRIS, E-Wallet, dan Virtual Account Bank.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Grid Pilihan Game -->
+            <div>
+                <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <i data-lucide="flame" class="w-5 h-5 text-amber-500"></i> Game Populer
+                </h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4" id="gameGrid">
+                    <!-- Game items generated by JS -->
+                </div>
+            </div>
+
+            <!-- Form Topup Section (Muncul saat game dipilih) -->
+            <div id="topupFormSection" class="hidden space-y-6 pt-6 border-t border-gray-800">
+                <div class="flex items-center gap-3 bg-brand-600/10 border border-brand-500/30 p-4 rounded-2xl">
+                    <img id="selectedGameImg" src="" alt="" class="w-12 h-12 rounded-xl object-cover">
+                    <div>
+                        <h3 id="selectedGameName" class="text-lg font-bold text-white"></h3>
+                        <p class="text-xs text-gray-400">Isi data akun & pilih nominal yang diinginkan</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Form Input ID & Pilih Item -->
+                    <div class="lg:col-span-2 space-y-6">
+                        
+                        <!-- Step 1: Data Akun -->
+                        <div class="glass-card rounded-2xl p-6 border border-gray-800">
+                            <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-brand-600 text-xs flex items-center justify-center font-extrabold">1</span>
+                                Masukkan Data Akun
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-400 mb-1">User ID / Character ID *</label>
+                                    <input type="text" id="inputId" placeholder="Contoh: 123456789" class="w-full bg-gray-900/80 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-400 mb-1">Zone ID / Server (Opsional)</label>
+                                    <input type="text" id="inputZone" placeholder="Contoh: 2134" class="w-full bg-gray-900/80 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Pilih Nominal -->
+                        <div class="glass-card rounded-2xl p-6 border border-gray-800">
+                            <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-brand-600 text-xs flex items-center justify-center font-extrabold">2</span>
+                                Pilih Nominal Item
+                            </h3>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="itemGrid">
+                                <!-- Nominal items generated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Pilih Pembayaran -->
+                        <div class="glass-card rounded-2xl p-6 border border-gray-800">
+                            <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-brand-600 text-xs flex items-center justify-center font-extrabold">3</span>
+                                Metode Pembayaran
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="paymentGrid">
+                                <!-- Payment options generated by JS -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Ringkasan Checkout Sticky -->
+                    <div>
+                        <div class="glass-card rounded-2xl p-6 border border-gray-800 sticky top-24 space-y-4">
+                            <h3 class="text-base font-bold text-white border-b border-gray-800 pb-3 flex items-center gap-2">
+                                <i data-lucide="shopping-cart" class="w-5 h-5 text-brand-neon"></i> Ringkasan Pesanan
+                            </h3>
+                            
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between text-gray-400">
+                                    <span>Game Selected:</span>
+                                    <span id="summaryGame" class="font-semibold text-white">-</span>
+                                </div>
+                                <div class="flex justify-between text-gray-400">
+                                    <span>Item Nominal:</span>
+                                    <span id="summaryItem" class="font-semibold text-white">-</span>
+                                </div>
+                                <div class="flex justify-between text-gray-400">
+                                    <span>Metode Bayar:</span>
+                                    <span id="summaryPayment" class="font-semibold text-white">-</span>
+                                </div>
+                                <div class="border-t border-gray-800 pt-3 flex justify-between items-center">
+                                    <span class="text-base font-extrabold text-white">Total Tagihan:</span>
+                                    <span id="summaryTotal" class="text-lg font-black text-brand-neon">Rp 0</span>
+                                </div>
+                            </div>
+
+                            <button onclick="processCheckout()" class="w-full bg-gradient-to-r from-brand-600 to-brand-accent hover:from-brand-500 hover:to-purple-600 text-white font-extrabold py-3.5 rounded-xl shadow-lg shadow-brand-600/30 transition transform active:scale-95 flex items-center justify-center gap-2">
+                                <i data-lucide="credit-card" class="w-5 h-5"></i> Beli Sekarang
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= PAGE: TRANSACTION HISTORY ================= -->
+        <div id="pageHistory" class="hidden space-y-6">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Riwayat Transaksi</h2>
+                    <p class="text-xs text-gray-400">Daftar transaksi topup game milik Anda</p>
+                </div>
+                <button onclick="switchTab('home')" class="text-xs text-brand-neon hover:underline flex items-center gap-1">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Beranda
+                </button>
+            </div>
+
+            <div class="glass-card rounded-2xl overflow-hidden border border-gray-800">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-gray-900/80 text-xs uppercase text-gray-400 border-b border-gray-800">
+                            <tr>
+                                <th class="py-3.5 px-4">ID TRX</th>
+                                <th class="py-3.5 px-4">Game & Item</th>
+                                <th class="py-3.5 px-4">User ID Game</th>
+                                <th class="py-3.5 px-4">Total</th>
+                                <th class="py-3.5 px-4">Metode</th>
+                                <th class="py-3.5 px-4">Status</th>
+                                <th class="py-3.5 px-4">Tanggal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userHistoryTable" class="divide-y divide-gray-800">
+                            <!-- Rows rendered by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE: ADMIN PANEL ================= -->
+        <div id="pageAdmin" class="hidden space-y-8">
+            <!-- Header Admin -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-r from-purple-900/40 via-dark-card to-dark-card p-6 rounded-2xl border border-purple-800/40">
+                <div>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30 uppercase tracking-widest">Admin Control Center</span>
+                    <h2 class="text-2xl font-black text-white mt-1">Dashboard Management</h2>
+                </div>
+                <button onclick="switchTab('home')" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-xs text-gray-200 rounded-xl transition flex items-center gap-2">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Keluar dari Admin
+                </button>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-card p-5 rounded-2xl border border-gray-800 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                        <i data-lucide="dollar-sign" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">Total Omset</p>
+                        <h4 id="statTotalRevenue" class="text-xl font-bold text-white mt-0.5">Rp 0</h4>
+                    </div>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl border border-gray-800 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-brand-500/10 text-brand-neon flex items-center justify-center">
+                        <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">Total Transaksi</p>
+                        <h4 id="statTotalTrx" class="text-xl font-bold text-white mt-0.5">0</h4>
+                    </div>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl border border-gray-800 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                        <i data-lucide="clock" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">Pending Order</p>
+                        <h4 id="statPendingTrx" class="text-xl font-bold text-white mt-0.5">0</h4>
+                    </div>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl border border-gray-800 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">Pengguna Terdaftar</p>
+                        <h4 id="statTotalUsers" class="text-xl font-bold text-white mt-0.5">0</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabel Manajemen Transaksi -->
+            <div class="glass-card rounded-2xl border border-gray-800 p-6 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i data-lucide="list-checks" class="w-5 h-5 text-purple-400"></i> Kelola Transaksi Masuk
+                    </h3>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-gray-900/80 text-xs uppercase text-gray-400 border-b border-gray-800">
+                            <tr>
+                                <th class="py-3 px-4">ID TRX</th>
+                                <th class="py-3 px-4">User</th>
+                                <th class="py-3 px-4">Game & Item</th>
+                                <th class="py-3 px-4">User Game ID</th>
+                                <th class="py-3 px-4">Total</th>
+                                <th class="py-3 px-4">Status</th>
+                                <th class="py-3 px-4 text-center">Aksi (Ubah Status)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTrxTable" class="divide-y divide-gray-800">
+                            <!-- Admin transaction list rendered by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 bg-dark-card mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center sm:flex sm:justify-between sm:items-center text-xs text-gray-500">
+            <p>© 2026 GAMESTORE. All Rights Reserved. Designed for gaming community.</p>
+            <div class="flex justify-center gap-4 mt-4 sm:mt-0">
+                <button onclick="loginAsAdminDemo()" class="hover:text-purple-400 transition underline">Mode Admin Demo</button>
+                <a href="#" class="hover:text-gray-300">Privacy Policy</a>
+                <a href="#" class="hover:text-gray-300">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL AUTH (LOGIN / REGISTER) -->
+    <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden p-4">
+        <div class="glass-card w-full max-w-md rounded-3xl p-6 border border-gray-800 relative shadow-2xl">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Modal Header Tabs -->
+            <div class="flex border-b border-gray-800 mb-6">
+                <button id="tabBtnLogin" onclick="setAuthTab('login')" class="flex-1 py-3 text-center text-sm font-bold border-b-2 border-brand-500 text-white">Masuk</button>
+                <button id="tabBtnRegister" onclick="setAuthTab('register')" class="flex-1 py-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-400 hover:text-gray-200">Daftar</button>
+            </div>
+
+            <!-- Form Login -->
+            <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Email / Username</label>
+                    <input type="text" id="loginEmail" required placeholder="user@gmail.com" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-brand-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Password</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-brand-500 focus:outline-none">
+                </div>
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-brand-600/30 text-sm">
+                    Masuk Sekarang
+                </button>
+                
+                <div class="text-center pt-2">
+                    <button type="button" onclick="loginAsAdminDemo()" class="text-xs text-purple-400 hover:underline font-semibold">
+                        🔑 Atau masuk sebagai Admin Demo
+                    </button>
+                </div>
+            </form>
+
+            <!-- Form Register -->
+            <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Nama Lengkap</label>
+                    <input type="text" id="regName" required placeholder="John Doe" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-brand-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Email</label>
+                    <input type="email" id="regEmail" required placeholder="user@gmail.com" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-brand-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Password</label>
+                    <input type="password" id="regPassword" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-brand-500 focus:outline-none">
+                </div>
+                <button type="submit" class="w-full bg-brand-accent hover:bg-purple-600 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-purple-600/30 text-sm">
+                    Buat Akun Baru
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-gray-900 border border-brand-500 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transition transform translate-y-20 opacity-0">
+        <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400" id="toastIcon"></i>
+        <span id="toastMessage" class="text-xs font-semibold">Notifikasi</span>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Data Mockup
+        const gamesData = [
+            { id: 'mlbb', name: 'Mobile Legends', img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&auto=format&fit=crop&q=60' },
+            { id: 'ff', name: 'Free Fire', img: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=200&auto=format&fit=crop&q=60' },
+            { id: 'pubg', name: 'PUBG Mobile', img: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=200&auto=format&fit=crop&q=60' },
+            { id: 'genshin', name: 'Genshin Impact', img: 'https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=200&auto=format&fit=crop&q=60' },
+            { id: 'valorant', name: 'Valorant', img: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=200&auto=format&fit=crop&q=60' },
+            { id: 'honkai', name: 'Honkai Star Rail', img: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=200&auto=format&fit=crop&q=60' }
+        ];
+
+        const itemNominals = [
+            { id: 'item1', name: '86 Diamonds', price: 20000 },
+            { id: 'item2', name: '172 Diamonds', price: 40000 },
+            { id: 'item3', name: '257 Diamonds', price: 60000 },
+            { id: 'item4', name: '344 Diamonds', price: 80000 },
+            { id: 'item5', name: '706 Diamonds', price: 160000 },
+            { id: 'item6', name: '2195 Diamonds', price: 490000 }
+        ];
+
+        const paymentMethods = [
+            { id: 'qris', name: 'QRIS (All E-Wallet)', fee: 0, img: 'https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?w=100&auto=format&fit=crop&q=60' },
+            { id: 'dana', name: 'DANA', fee: 1000, img: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=100&auto=format&fit=crop&q=60' },
+            { id: 'gopay', name: 'GoPay', fee: 1000, img: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=100&auto=format&fit=crop&q=60' },
+            { id: 'bca', name: 'Virtual Account BCA', fee: 2500, img: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=100&auto=format&fit=crop&q=60' }
+        ];
+
+        // State Global
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [
+            { id: 'TRX-8921', userEmail: 'user@gmail.com', userName: 'Gamer User', game: 'Mobile Legends', item: '86 Diamonds', targetId: '12345678 (2134)', total: 20000, payment: 'QRIS', status: 'Success', date: '2026-03-28' },
+            { id: 'TRX-8922', userEmail: 'user@gmail.com', userName: 'Gamer User', game: 'Free Fire', item: '140 Diamonds', targetId: '87654321', total: 20000, payment: 'DANA', status: 'Pending', date: '2026-03-29' }
+        ];
+
+        let selectedGame = null;
+        let selectedItem = null;
+        let selectedPayment = null;
+
+        // Init App
+        window.addEventListener('DOMContentLoaded', () => {
+            renderGameGrid();
+            renderNavbar();
+            lucide.createIcons();
+        });
+
+        function saveState() {
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+
+        // Render Navbar Auth
+        function renderNavbar() {
+            const container = document.getElementById('navAuthContainer');
+            if (currentUser) {
+                if (currentUser.role === 'admin') {
+                    container.innerHTML = `
+                        <button onclick="switchTab('admin')" class="px-3.5 py-1.5 rounded-xl bg-purple-600/20 text-purple-300 border border-purple-500/30 text-xs font-bold flex items-center gap-2 hover:bg-purple-600/30">
+                            <i data-lucide="shield" class="w-4 h-4"></i> Admin Panel
+                        </button>
+                        <button onclick="logout()" class="p-2 rounded-xl bg-gray-800 text-gray-400 hover:text-white">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        </button>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <button onclick="switchTab('history')" class="px-3.5 py-1.5 rounded-xl bg-gray-800 text-gray-200 text-xs font-semibold hover:bg-gray-700 flex items-center gap-1.5">
+                            <i data-lucide="user" class="w-4 h-4 text-brand-neon"></i> ${currentUser.name}
+                        </button>
+                        <button onclick="logout()" class="p-2 rounded-xl bg-gray-800 text-gray-400 hover:text-white" title="Logout">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        </button>
+                    `;
+                }
+            } else {
+                container.innerHTML = `
+                    <button onclick="openAuthModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-brand-accent hover:opacity-90 text-white text-xs font-extrabold shadow-md shadow-brand-600/20 transition">
+                        Masuk / Daftar
+                    </button>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        // Switch View Pages
+        function switchTab(page) {
+            document.getElementById('pageHome').classList.add('hidden');
+            document.getElementById('pageHistory').classList.add('hidden');
+            document.getElementById('pageAdmin').classList.add('hidden');
+
+            if (page === 'home') document.getElementById('pageHome').classList.remove('hidden');
+            if (page === 'history') {
+                document.getElementById('pageHistory').classList.remove('hidden');
+                renderUserHistory();
+            }
+            if (page === 'admin') {
+                document.getElementById('pageAdmin').classList.remove('hidden');
+                renderAdminDashboard();
+            }
+        }
+
+        // Render Game Grid
+        function renderGameGrid() {
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = gamesData.map(game => `
+                <div onclick="selectGame('${game.id}')" class="group glass-card rounded-2xl p-3 border border-gray-800 hover:border-brand-500/50 cursor-pointer transition transform hover:-translate-y-1 shadow-lg">
+                    <div class="aspect-square rounded-xl overflow-hidden mb-2 bg-gray-800">
+                        <img src="${game.img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
+                    </div>
+                    <h4 class="text-xs font-bold text-gray-200 group-hover:text-brand-neon truncate text-center">${game.name}</h4>
+                </div>
+            `).join('');
+        }
+
+        function selectGame(gameId) {
+            selectedGame = gamesData.find(g => g.id === gameId);
+            document.getElementById('selectedGameImg').src = selectedGame.img;
+            document.getElementById('selectedGameName').innerText = selectedGame.name;
+            document.getElementById('topupFormSection').classList.remove('hidden');
+
+            renderItems();
+            renderPayments();
+            updateSummary();
+
+            document.getElementById('topupFormSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function renderItems() {
+            const container = document.getElementById('itemGrid');
+            container.innerHTML = itemNominals.map(item => `
+                <div onclick="selectItem('${item.id}')" id="itemCard-${item.id}" class="glass-card p-3 rounded-xl border border-gray-800 hover:border-brand-500 cursor-pointer transition text-center space-y-1">
+                    <p class="text-xs font-bold text-white">${item.name}</p>
+                    <p class="text-[11px] text-brand-neon font-semibold">Rp ${item.price.toLocaleString('id-ID')}</p>
+                </div>
+            `).join('');
+        }
+
+        function selectItem(itemId) {
+            selectedItem = itemNominals.find(i => i.id === itemId);
+            document.querySelectorAll('[id^="itemCard-"]').forEach(el => el.classList.remove('border-brand-500', 'bg-brand-600/10'));
+            document.getElementById(`itemCard-${itemId}`).classList.add('border-brand-500', 'bg-brand-600/10');
+            updateSummary();
+        }
+
+        function renderPayments() {
+            const container = document.getElementById('paymentGrid');
+            container.innerHTML = paymentMethods.map(pay => `
+                <div onclick="selectPayment('${pay.id}')" id="payCard-${pay.id}" class="glass-card p-3 rounded-xl border border-gray-800 hover:border-brand-500 cursor-pointer transition flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-white">${pay.name}</p>
+                        <p class="text-[10px] text-gray-400">Biaya: Rp ${pay.fee.toLocaleString('id-ID')}</p>
+                    </div>
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-brand-500 opacity-0" id="payCheck-${pay.id}"></i>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function selectPayment(payId) {
+            selectedPayment = paymentMethods.find(p => p.id === payId);
+            document.querySelectorAll('[id^="payCard-"]').forEach(el => el.classList.remove('border-brand-500', 'bg-brand-600/10'));
+            document.querySelectorAll('[id^="payCheck-"]').forEach(el => el.classList.add('opacity-0'));
+
+            document.getElementById(`payCard-${payId}`).classList.add('border-brand-500', 'bg-brand-600/10');
+            document.getElementById(`payCheck-${payId}`).classList.remove('opacity-0');
+            updateSummary();
+        }
+
+        function updateSummary() {
+            document.getElementById('summaryGame').innerText = selectedGame ? selectedGame.name : '-';
+            document.getElementById('summaryItem').innerText = selectedItem ? selectedItem.name : '-';
+            document.getElementById('summaryPayment').innerText = selectedPayment ? selectedPayment.name : '-';
+
+            const total = (selectedItem ? selectedItem.price : 0) + (selectedPayment ? selectedPayment.fee : 0);
+            document.getElementById('summaryTotal').innerText = `Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        // Handle Checkout
+        function processCheckout() {
+            const userId = document.getElementById('inputId').value;
+            const zoneId = document.getElementById('inputZone').value;
+
+            if (!userId) return showToast('Masukkan User ID Game Anda!', 'error');
+            if (!selectedGame || !selectedItem || !selectedPayment) return showToast('Lengkapi pilihan pesanan!', 'error');
+
+            const total = selectedItem.price + selectedPayment.fee;
+            const newTrx = {
+                id: 'TRX-' + Math.floor(1000 + Math.random() * 9000),
+                userEmail: currentUser ? currentUser.email : 'guest@gmail.com',
+                userName: currentUser ? currentUser.name : 'Guest User',
+                game: selectedGame.name,
+                item: selectedItem.name,
+                targetId: userId + (zoneId ? ` (${zoneId})` : ''),
+                total: total,
+                payment: selectedPayment.name,
+                status: 'Pending',
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            transactions.unshift(newTrx);
+            saveState();
+
+            showToast('Pesanan berhasil dibuat! Menunggu Pembayaran.', 'success');
+            
+            // Reset form
+            document.getElementById('inputId').value = '';
+            document.getElementById('inputZone').value = '';
+            selectedItem = null;
+            selectedPayment = null;
+            updateSummary();
+            
+            if (currentUser) {
+                setTimeout(() => switchTab('history'), 1200);
+            }
+        }
+
+        // Modal Auth
+        function openAuthModal() {
+            document.getElementById('authModal').classList.remove('hidden');
+        }
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
+        function setAuthTab(tab) {
+            if (tab === 'login') {
+                document.getElementById('formLogin').classList.remove('hidden');
+                document.getElementById('formRegister').classList.add('hidden');
+                document.getElementById('tabBtnLogin').className = 'flex-1 py-3 text-center text-sm font-bold border-b-2 border-brand-500 text-white';
+                document.getElementById('tabBtnRegister').className = 'flex-1 py-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-400';
+            } else {
+                document.getElementById('formLogin').classList.add('hidden');
+                document.getElementById('formRegister').classList.remove('hidden');
+                document.getElementById('tabBtnRegister').className = 'flex-1 py-3 text-center text-sm font-bold border-b-2 border-brand-500 text-white';
+                document.getElementById('tabBtnLogin').className = 'flex-1 py-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-400';
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            currentUser = { name: email.split('@')[0], email: email, role: 'user' };
+            saveState();
+            renderNavbar();
+            closeAuthModal();
+            showToast(`Selamat datang kembali, ${currentUser.name}!`, 'success');
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            currentUser = { name: name, email: email, role: 'user' };
+            saveState();
+            renderNavbar();
+            closeAuthModal();
+            showToast('Akun berhasil dibuat!', 'success');
+        }
+
+        function loginAsAdminDemo() {
+            currentUser = { name: 'Administrator', email: 'admin@gamestore.com', role: 'admin' };
+            saveState();
+            renderNavbar();
+            closeAuthModal();
+            switchTab('admin');
+            showToast('Masuk sebagai Admin Demo', 'success');
+        }
+
+        function logout() {
+            currentUser = null;
+            saveState();
+            renderNavbar();
+            switchTab('home');
+            showToast('Berhasil keluar akun.', 'success');
+        }
+
+        function checkTransactionHistory() {
+            if (!currentUser) {
+                openAuthModal();
+                showToast('Silakan masuk untuk melihat riwayat transaksi', 'error');
+            } else {
+                switchTab('history');
+            }
+        }
+
+        // Render History User
+        function renderUserHistory() {
+            const tbody = document.getElementById('userHistoryTable');
+            const myTrx = transactions.filter(t => t.userEmail === currentUser.email);
+
+            if (myTrx.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-gray-500">Belum ada riwayat transaksi.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = myTrx.map(t => `
+                <tr class="hover:bg-gray-800/40">
+                    <td class="py-3 px-4 font-mono text-xs text-gray-400">${t.id}</td>
+                    <td class="py-3 px-4 font-semibold text-white">${t.game} - <span class="text-brand-neon">${t.item}</span></td>
+                    <td class="py-3 px-4">${t.targetId}</td>
+                    <td class="py-3 px-4 font-bold text-white">Rp ${t.total.toLocaleString('id-ID')}</td>
+                    <td class="py-3 px-4 text-xs">${t.payment}</td>
+                    <td class="py-3 px-4">${renderStatusBadge(t.status)}</td>
+                    <td class="py-3 px-4 text-xs text-gray-400">${t.date}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Render Admin Dashboard
+        function renderAdminDashboard() {
+            // Stats
+            const totalRevenue = transactions.filter(t => t.status === 'Success').reduce((acc, curr) => acc + curr.total, 0);
+            const pendingCount = transactions.filter(t => t.status === 'Pending').length;
+
+            document.getElementById('statTotalRevenue').innerText = `Rp ${totalRevenue.toLocaleString('id-ID')}`;
+            document.getElementById('statTotalTrx').innerText = transactions.length;
+            document.getElementById('statPendingTrx').innerText = pendingCount;
+            document.getElementById('statTotalUsers').innerText = '12';
+
+            // Table
+            const tbody = document.getElementById('adminTrxTable');
+            tbody.innerHTML = transactions.map(t => `
+                <tr class="hover:bg-gray-800/40">
+                    <td class="py-3 px-4 font-mono text-xs text-gray-400">${t.id}</td>
+                    <td class="py-3 px-4 font-medium text-white">${t.userName} <br><span class="text-[10px] text-gray-400">${t.userEmail}</span></td>
+                    <td class="py-3 px-4">${t.game} - <span class="text-brand-neon">${t.item}</span></td>
+                    <td class="py-3 px-4 font-mono text-xs">${t.targetId}</td>
+                    <td class="py-3 px-4 font-bold text-white">Rp ${t.total.toLocaleString('id-ID')}</td>
+                    <td class="py-3 px-4">${renderStatusBadge(t.status)}</td>
+                    <td class="py-3 px-4 text-center">
+                        <div class="flex items-center justify-center gap-1">
+                            <button onclick="updateTrxStatus('${t.id}', 'Success')" class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-bold hover:bg-emerald-500/40">Set Sukses</button>
+                            <button onclick="updateTrxStatus('${t.id}', 'Failed')" class="px-2 py-1 rounded bg-rose-500/20 text-rose-300 text-[10px] font-bold hover:bg-rose-500/40">Set Gagal</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateTrxStatus(trxId, newStatus) {
+            const target = transactions.find(t => t.id === trxId);
+            if (target) {
+                target.status = newStatus;
+                saveState();
+                renderAdminDashboard();
+                showToast(`Status ${trxId} diubah ke ${newStatus}`, 'success');
+            }
+        }
+
+        function renderStatusBadge(status) {
+            if (status === 'Success') return `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Sukses</span>`;
+            if (status === 'Pending') return `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">Pending</span>`;
+            return `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">Gagal</span>`;
+        }
+
+        // Toast Helper
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
