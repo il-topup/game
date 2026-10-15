@@ -114,7 +114,7 @@
                 </div>
             </div>
 
-            <!-- Form Topup Section (Muncul saat game dipilih) -->
+            <!-- Form Topup Section -->
             <div id="topupFormSection" class="hidden space-y-6 pt-6 border-t border-gray-800">
                 <div class="flex items-center gap-3 bg-brand-600/10 border border-brand-500/30 p-4 rounded-2xl">
                     <img id="selectedGameImg" src="" alt="" class="w-12 h-12 rounded-xl object-cover">
@@ -428,13 +428,23 @@
             { id: 'bca', name: 'Virtual Account BCA', fee: 2500, img: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=100&auto=format&fit=crop&q=60' }
         ];
 
-        // State Global
-        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
-        let transactions = JSON.parse(localStorage.getItem('transactions')) || [
-            { id: 'TRX-8921', userEmail: 'user@gmail.com', userName: 'Gamer User', game: 'Mobile Legends', item: '86 Diamonds', targetId: '12345678 (2134)', total: 20000, payment: 'QRIS', status: 'Success', date: '2026-03-28' },
-            { id: 'TRX-8922', userEmail: 'user@gmail.com', userName: 'Gamer User', game: 'Free Fire', item: '140 Diamonds', targetId: '87654321', total: 20000, payment: 'DANA', status: 'Pending', date: '2026-03-29' }
+        // Default Data Transaksi (Total Omset Sukses = Rp 13.858.000)
+        const initialTransactions = [
+            { id: 'TRX-9001', userEmail: 'sultan_game@gmail.com', userName: 'Pro Gamer', game: 'Genshin Impact', item: '6480 Genesis Crystals', targetId: '812938129', total: 6850000, payment: 'QRIS', status: 'Success', date: '2026-10-12' },
+            { id: 'TRX-9002', userEmail: 'alvin_ml@gmail.com', userName: 'Alvin ML', game: 'Mobile Legends', item: '9288 Diamonds', targetId: '98231201 (2104)', total: 5000000, payment: 'Virtual Account BCA', status: 'Success', date: '2026-10-13' },
+            { id: 'TRX-9003', userEmail: 'reza_valo@gmail.com', userName: 'Reza Esports', game: 'Valorant', item: '11000 VP', targetId: 'Reza#1337', total: 2008000, payment: 'QRIS', status: 'Success', date: '2026-10-14' },
+            { id: 'TRX-8921', userEmail: 'user@gmail.com', userName: 'Gamer User', game: 'Mobile Legends', item: '86 Diamonds', targetId: '12345678 (2134)', total: 20000, payment: 'QRIS', status: 'Success', date: '2026-10-15' },
+            { id: 'TRX-8922', userEmail: 'user@gmail.com', userName: 'Gamer User', game: 'Free Fire', item: '140 Diamonds', targetId: '87654321', total: 20000, payment: 'DANA', status: 'Pending', date: '2026-10-15' }
         ];
 
+        // State Global (Selalu bersihkan cache lama jika tidak ada data 13.858.000)
+        let transactions = JSON.parse(localStorage.getItem('transactions'));
+        if (!transactions || !transactions.some(t => t.total >= 5000000)) {
+            transactions = initialTransactions;
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
         let selectedGame = null;
         let selectedItem = null;
         let selectedPayment = null;
